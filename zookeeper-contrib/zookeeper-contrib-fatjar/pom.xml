@@ -21,15 +21,15 @@
   -->
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.linkedin.zookeeper</groupId>
+    <groupId>com.linkedin.zkbridge</groupId>
     <artifactId>zookeeper-contrib</artifactId>
-    <version>3.6.5-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.linkedin.zookeeper</groupId>
+  <groupId>com.linkedin.zkbridge</groupId>
   <artifactId>zookeeper-contrib-fatjar</artifactId>
   <packaging>jar</packaging>
-  <name>Apache ZooKeeper - Contrib - Fatjar</name>
+  <name>ZKBridge - Contrib - Fatjar</name>
 
   <properties>
     <maven.javadoc.skip>true</maven.javadoc.skip>
@@ -38,23 +38,23 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.linkedin.zookeeper</groupId>
+      <groupId>com.linkedin.zkbridge</groupId>
       <artifactId>zookeeper-jute</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.linkedin.zookeeper</groupId>
+      <groupId>com.linkedin.zkbridge</groupId>
       <artifactId>zookeeper</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.linkedin.zookeeper</groupId>
+      <groupId>com.linkedin.zkbridge</groupId>
       <artifactId>zookeeper</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
     </dependency>
     <dependency>
-      <groupId>com.linkedin.zookeeper</groupId>
+      <groupId>com.linkedin.zkbridge</groupId>
       <artifactId>zookeeper-it</artifactId>
       <version>${project.version}</version>
     </dependency>

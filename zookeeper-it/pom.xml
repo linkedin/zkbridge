@@ -21,14 +21,14 @@
   -->
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.linkedin.zookeeper</groupId>
+    <groupId>com.linkedin.zkbridge</groupId>
     <artifactId>parent</artifactId>
-    <version>3.6.5-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>zookeeper-it</artifactId>
   <packaging>jar</packaging>
-  <name>Apache ZooKeeper - Tests</name>
+  <name>ZKBridge - Tests</name>
   <description>
     ZooKeeper system tests
   </description>
@@ -41,12 +41,12 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.linkedin.zookeeper</groupId>
+      <groupId>com.linkedin.zkbridge</groupId>
       <artifactId>zookeeper</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.linkedin.zookeeper</groupId>
+      <groupId>com.linkedin.zkbridge</groupId>
       <artifactId>zookeeper</artifactId>
       <classifier>tests</classifier>
       <type>test-jar</type>

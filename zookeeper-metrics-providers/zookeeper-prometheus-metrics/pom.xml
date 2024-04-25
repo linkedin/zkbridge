@@ -21,15 +21,15 @@
   -->
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.linkedin.zookeeper</groupId>
+    <groupId>com.linkedin.zkbridge</groupId>
     <artifactId>zookeeper-metrics-providers</artifactId>
-    <version>3.6.5-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 
   <artifactId>zookeeper-prometheus-metrics</artifactId>
   <packaging>jar</packaging>
-  <name>Apache ZooKeeper - Prometheus.io Metrics Provider</name>
+  <name>ZKBridge - Prometheus.io Metrics Provider</name>
   <description>ZooKeeper Prometheus.io Metrics Provider implementation</description>
 
   <properties>
@@ -37,7 +37,7 @@
   </properties>
   <dependencies>
     <dependency>
-      <groupId>com.linkedin.zookeeper</groupId>
+      <groupId>com.linkedin.zkbridge</groupId>
       <!-- we can create a metrics-providers-api package
            once we get rid of ant based build
            https://issues.apache.org/jira/browse/ZOOKEEPER-3376
@@ -79,6 +79,7 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
+      <version>4.13</version>
     </dependency>
   </dependencies>
 

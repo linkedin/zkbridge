@@ -21,15 +21,15 @@
   -->
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.linkedin.zookeeper</groupId>
+    <groupId>com.linkedin.zkbridge</groupId>
     <artifactId>parent</artifactId>
-    <version>3.6.5-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 
   <artifactId>zookeeper-jute</artifactId>
   <packaging>jar</packaging>
-  <name>Apache ZooKeeper - Jute</name>
+  <name>ZKBridge - Jute</name>
   <description>ZooKeeper jute</description>
 
   <dependencies>
@@ -41,6 +41,7 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
+      <version>4.13</version>
     </dependency>
   </dependencies>
 

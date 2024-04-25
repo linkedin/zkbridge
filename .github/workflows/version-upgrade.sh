@@ -27,7 +27,7 @@ if [ "$#" -eq 2 ]; then
   version=$1
   new_version=$2
 else
-  version=`grep -A 4 "<groupId>com.linkedin.zookeeper</groupId>" pom.xml | grep "<version>" | awk 'BEGIN {FS="[<,>]"};{print $3}'`  
+  version=`grep -A 4 "<groupId>com.linkedin.zkbridge</groupId>" pom.xml | grep "<version>" | awk 'BEGIN {FS="[<,>]"};{print $3}'`  
 
 # just use the given version as the new version
   new_version=$1

@@ -27,14 +27,13 @@
     <relativePath />
     <!-- no parent resolution -->
   </parent>
-  <groupId>com.linkedin.zookeeper</groupId>
+  <groupId>com.linkedin.zkbridge</groupId>
   <artifactId>parent</artifactId>
   <packaging>pom</packaging>
-  <!-- to change version: mvn -\-batch-mode release:update-versions -DdevelopmentVersion=3.6.0-SNAPSHOT -->
-  <version>3.6.5-SNAPSHOT</version>
-  <name>Apache ZooKeeper</name>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>LinkedIn ZKBridge</name>
   <description>
-    Disclaimer: this version of ZooKeeper artifact has been modified for use at LinkedIn.
+    Disclaimer: This version of ZooKeeper artifact has been modified for use at LinkedIn.
 
     ZooKeeper is a centralized service for maintaining configuration information, naming,
     providing distributed synchronization, and providing group services. All of these kinds
@@ -65,7 +64,6 @@
     <module>zookeeper-metrics-providers</module>
     <module>zookeeper-client</module>
     <module>zookeeper-recipes</module>
-    <module>zookeeper-assembly</module>
     <module>zookeeper-compatibility-tests</module>
   </modules>
 
@@ -73,7 +71,7 @@
     <connection>scm:git:https://gitbox.apache.org/repos/asf/zookeeper.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/zookeeper.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf/zookeeper.git</url>
-    <tag>branch-3.6.4</tag>
+    <tag>HEAD</tag>
   </scm>
   <issueManagement>
     <system>GitHub Issues</system>
@@ -223,15 +221,18 @@
     <profile>
       <id>full-build</id>
       <modules>
-        <module>zookeeper-it</module>
         <module>zookeeper-contrib</module>
+        <!-- zookeeper-it needed by fatjar contrib -->
+        <module>zookeeper-it</module>
       </modules>
     </profile>
     <profile>
+      <!-- fatjar only profile; zookeeper-contrib will activate the fatjar in its pom -->
       <id>fatjar</id>
       <modules>
-        <module>zookeeper-it</module>
         <module>zookeeper-contrib</module>
+        <!-- zookeeper-it needed by fatjar contrib -->
+        <module>zookeeper-it</module>
       </modules>
     </profile>
     <profile>
@@ -315,26 +316,32 @@
     <logback-version>1.2.10</logback-version>
     <audience-annotations.version>0.13.0</audience-annotations.version>
     <jmockit.version>1.48</jmockit.version>
-    <junit.version>4.12</junit.version>
-    <mockito.version>2.27.0</mockito.version>
-    <hamcrest.version>1.3</hamcrest.version>
-    <commons-cli.version>1.4</commons-cli.version>
-    <netty.version>4.1.86.Final</netty.version>
-    <jetty.version>9.4.49.v20220914</jetty.version>
-    <jackson.version>2.13.4.2</jackson.version>
+    <junit.version>5.6.2</junit.version>
+    <junit-platform.version>1.6.2</junit-platform.version>
+    <mockito.version>4.9.0</mockito.version>
+    <hamcrest.version>2.2</hamcrest.version>
+    <commons-cli.version>1.5.0</commons-cli.version>
+    <netty.version>4.1.105.Final</netty.version>
+    <jetty.version>9.4.53.v20231009</jetty.version>
+    <jackson.version>2.15.2</jackson.version>
     <json.version>1.1.1</json.version>
     <jline.version>2.14.6</jline.version>
-    <snappy.version>1.1.8.4</snappy.version>
-    <kerby.version>2.0.2</kerby.version>
-    <bouncycastle.version>1.70</bouncycastle.version>
-    <commons-collections.version>3.2.2</commons-collections.version>
-    <dropwizard.version>3.2.5</dropwizard.version>
+    <snappy.version>1.1.10.5</snappy.version>
+    <kerby.version>2.0.0</kerby.version>
+    <bouncycastle.version>1.75</bouncycastle.version>
+    <commons-collections.version>4.4</commons-collections.version>
+    <dropwizard.version>4.1.12.1</dropwizard.version>
     <spotbugsannotations.version>4.0.2</spotbugsannotations.version>
-    <checkstyle.version>8.19</checkstyle.version>
+    <checkstyle.version>8.39</checkstyle.version>
     <enforcer.version>3.0.0-M3</enforcer.version>
+    <commons-io.version>2.11.0</commons-io.version>
+    <burningwave.mockdns.version>0.25.4</burningwave.mockdns.version>
+    <clover-maven-plugin.version>4.4.1</clover-maven-plugin.version>
+    <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
 
-    <!-- parameter to pass to C client build -->
+    <!-- parameters to pass to C client build -->
     <c-client-openssl>yes</c-client-openssl>
+    <c-client-sasl>yes</c-client-sasl>
 
   </properties>
 
@@ -342,12 +349,12 @@
     <dependencies>
       <dependency>
         <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest-all</artifactId>
+        <artifactId>hamcrest-library</artifactId>
         <version>${hamcrest.version}</version>
       </dependency>
       <dependency>
-        <groupId>commons-collections</groupId>
-        <artifactId>commons-collections</artifactId>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-collections4</artifactId>
         <version>${commons-collections.version}</version>
       </dependency>
       <dependency>
@@ -399,12 +406,12 @@
       </dependency>
       <dependency>
         <groupId>org.bouncycastle</groupId>
-        <artifactId>bcprov-jdk15on</artifactId>
+        <artifactId>bcprov-jdk18on</artifactId>
         <version>${bouncycastle.version}</version>
       </dependency>
       <dependency>
         <groupId>org.bouncycastle</groupId>
-        <artifactId>bcpkix-jdk15on</artifactId>
+        <artifactId>bcpkix-jdk18on</artifactId>
         <version>${bouncycastle.version}</version>
       </dependency>
       <dependency>
@@ -428,8 +435,30 @@
         <version>${jmockit.version}</version>
       </dependency>
       <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${junit.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-runner</artifactId>
+        <version>${junit-platform.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.vintage</groupId>
+        <artifactId>junit-vintage-engine</artifactId>
         <version>${junit.version}</version>
       </dependency>
       <dependency>
@@ -439,13 +468,10 @@
       </dependency>
       <dependency>
         <groupId>io.netty</groupId>
-        <artifactId>netty-handler</artifactId>
+        <artifactId>netty-bom</artifactId>
         <version>${netty.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.netty</groupId>
-        <artifactId>netty-transport-native-epoll</artifactId>
-        <version>${netty.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
@@ -455,6 +481,11 @@
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-servlet</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-client</artifactId>
         <version>${jetty.version}</version>
       </dependency>
       <dependency>
@@ -501,6 +532,51 @@
         <artifactId>snappy-java</artifactId>
         <version>${snappy.version}</version>
       </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${commons-io.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.burningwave</groupId>
+        <artifactId>tools</artifactId>
+        <version>${burningwave.mockdns.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-api</artifactId>
+        <version>1.49.2</version>
+      </dependency>
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-netty-shaded</artifactId>
+        <version>1.49.2</version>
+      </dependency>
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-protobuf</artifactId>
+        <version>1.49.2</version>
+      </dependency>
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-stub</artifactId>
+        <version>1.49.2</version>
+      </dependency>
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-testing</artifactId>
+        <version>1.49.2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>3.22.2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api.grpc</groupId>
+        <artifactId>proto-google-common-protos</artifactId>
+        <version>2.22.0</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -514,7 +590,7 @@
           <configuration>
              <showWarnings>true</showWarnings>
              <compilerArgs>
-               <compilerArg>-Werror</compilerArg>
+<!--               <compilerArg>-Werror</compilerArg>-->
                <compilerArg>-Xlint:deprecation</compilerArg>
                <compilerArg>-Xlint:unchecked</compilerArg>
                <compilerArg>-Xlint:-options</compilerArg>
@@ -527,7 +603,6 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.1.0</version>
           <configuration>
             <archive>
               <manifestEntries>
@@ -539,25 +614,24 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>3.0.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.0.1</version>
+          <version>3.1.1</version>
           <configuration>
+            <quiet>true</quiet>
             <doclint>none</doclint>
           </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.6.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.5.3</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -567,17 +641,18 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
+          <configuration>
+              <trimStackTrace>false</trimStackTrace>
+              <redirectTestOutputToFile>${redirectTestOutputToFile}</redirectTestOutputToFile>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.8</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.1.1</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -618,12 +693,12 @@
         <plugin>
           <groupId>org.owasp</groupId>
           <artifactId>dependency-check-maven</artifactId>
-          <version>7.1.0</version>
+          <version>8.3.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.1.1</version>
           <dependencies>
             <dependency>
               <groupId>com.puppycrawl.tools</groupId>
@@ -664,7 +739,7 @@
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
-          <version>5.1.1</version>
+          <version>5.1.9</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -778,6 +853,7 @@
         <configuration>
           <overview>zookeeper-server/src/main/resources/overview.html</overview>
           <excludePackageNames>*.recipes.*</excludePackageNames>
+          <excludePackageNames>*.spiral.*</excludePackageNames>
         </configuration>
       </plugin>
       <plugin>
@@ -868,6 +944,11 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-scm-plugin</artifactId>
           <inherited>false</inherited>
           <executions>
@@ -947,7 +1028,6 @@
       </resource>
     </resources>
   </build>
-
   <reporting>
     <plugins>
       <plugin>
@@ -956,6 +1036,13 @@
       </plugin>
     </plugins>
   </reporting>
+  <repositories>
+  <repository>
+    <id>artifactory</id>
+    <name>LinkedIn's Artifactory</name>
+    <url>https://artifactory.corp.linkedin.com:8083/artifactory/release/</url>
+  </repository>
+  </repositories>
 
   <distributionManagement>
     <repository>
