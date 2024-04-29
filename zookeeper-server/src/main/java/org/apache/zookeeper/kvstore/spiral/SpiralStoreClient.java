@@ -34,40 +34,37 @@ import proto.com.linkedin.spiral.Value;
  */
 public class SpiralStoreClient implements KVStoreClient<String, byte[], SpiralContext> {
     private static final Logger LOG = LoggerFactory.getLogger(SpiralStoreClient.class);
-    
+
     private final SpiralApiGrpc.SpiralApiBlockingStub _blockingStub;
-    
-    private SpiralStoreClient(String spiralEndpoint, boolean useSsl, String caBundle, String identityCert, String identityKey, String overrideAuthority) {
+
+    private SpiralStoreClient(String spiralEndpoint, boolean useSsl, String caBundle,
+            String identityCert, String identityKey, String overrideAuthority) {
         try {
 
             NettyChannelBuilder channelBuilder = null;
             if (!useSsl) {
-                channelBuilder = NettyChannelBuilder
-                .forTarget(spiralEndpoint)
-                .usePlaintext();
+                channelBuilder = NettyChannelBuilder.forTarget(spiralEndpoint).usePlaintext();
             } else {
-                // Create an SSL context using the provided CA bundle, identity cert, and identity key.
-                SslContext sslContext = GrpcSslContexts.forClient()
-                                            .trustManager(new File(caBundle))
-                                            .keyManager(new File(identityCert), new File(identityKey))
-                                            .build();
-                
+                // Create an SSL context using the provided CA bundle, identity cert, and identity
+                // key.
+                SslContext sslContext = GrpcSslContexts.forClient().trustManager(new File(caBundle))
+                        .keyManager(new File(identityCert), new File(identityKey)).build();
+
                 // Create a channel using the SSL context.
-                channelBuilder = NettyChannelBuilder
-                    .forTarget(spiralEndpoint)
-                    .overrideAuthority(overrideAuthority)
-                    .sslContext(sslContext);
+                channelBuilder = NettyChannelBuilder.forTarget(spiralEndpoint)
+                        .overrideAuthority(overrideAuthority).sslContext(sslContext);
 
                 channelBuilder.negotiationType(NegotiationType.TLS);
                 ManagedChannel channel = channelBuilder.build();
             }
 
             ManagedChannel channel = channelBuilder.build();
-            _blockingStub = SpiralApiGrpc.newBlockingStub(channel);      
+            _blockingStub = SpiralApiGrpc.newBlockingStub(channel);
             LOG.info("Connected to spiral-service : {}", spiralEndpoint);
         } catch (Exception e) {
-        LOG.error("Failed to connect to spiral service at endpoint : {}", spiralEndpoint, e);
-        throw new RuntimeException(String.format("Failed to connect to spiral service at endpoint : %s", spiralEndpoint), e);
+            LOG.error("Failed to connect to spiral service at endpoint : {}", spiralEndpoint, e);
+            throw new RuntimeException(String.format(
+                    "Failed to connect to spiral service at endpoint : %s", spiralEndpoint), e);
         }
     }
 
@@ -76,38 +73,38 @@ public class SpiralStoreClient implements KVStoreClient<String, byte[], SpiralCo
         private String _spiralEndPoint;
         private boolean _useSsl = false;
         private String _caBundlePath = null;
-        private String _identityCertPath = null; 
+        private String _identityCertPath = null;
         private String _identityKeyPath = null;
         private String _overrideAuthority = null;
 
         public SpiralStoreClientBuilder withSpiralEndPoint(String spiralEndPoint) {
-        _spiralEndPoint = spiralEndPoint;
-        return this;
+            _spiralEndPoint = spiralEndPoint;
+            return this;
         }
 
         public SpiralStoreClientBuilder withSsl(boolean useSsl) {
-        _useSsl = useSsl;
-        return this;
+            _useSsl = useSsl;
+            return this;
         }
 
         public SpiralStoreClientBuilder withCaBundlePath(String caBundlePath) {
-        _caBundlePath = caBundlePath;
-        return this;
+            _caBundlePath = caBundlePath;
+            return this;
         }
 
         public SpiralStoreClientBuilder withIdentityCertPath(String identityCertPath) {
-        _identityCertPath = identityCertPath;
-        return this;
+            _identityCertPath = identityCertPath;
+            return this;
         }
 
         public SpiralStoreClientBuilder withIdentityKeyPath(String identityKeyPath) {
-        _identityKeyPath = identityKeyPath;
-        return this;
+            _identityKeyPath = identityKeyPath;
+            return this;
         }
 
         public SpiralStoreClientBuilder withOverrideAuthority(String overrideAuthority) {
-        _overrideAuthority = overrideAuthority;
-        return this;
+            _overrideAuthority = overrideAuthority;
+            return this;
         }
 
         public SpiralStoreClient build() {
@@ -118,26 +115,23 @@ public class SpiralStoreClient implements KVStoreClient<String, byte[], SpiralCo
                 Objects.requireNonNull(_identityKeyPath, "Identity key path is required");
                 Objects.requireNonNull(_overrideAuthority, "Override authority is required");
             }
-            return new SpiralStoreClient(_spiralEndPoint, _useSsl, _caBundlePath, _identityCertPath, _identityKeyPath, _overrideAuthority);
+            return new SpiralStoreClient(_spiralEndPoint, _useSsl, _caBundlePath, _identityCertPath,
+                    _identityKeyPath, _overrideAuthority);
         }
     }
 
     @Override
     public byte[] get(SpiralContext context, String key) {
         try {
-        ByteString keyBytes = ByteString.copyFromUtf8(key);
-        Key apiKey = Key.newBuilder()
-                        .setMessage(keyBytes)
-                        .build();
-        GetRequest request = GetRequest.newBuilder()
-                                    .setSpiralContext(context)
-                                    .setKey(apiKey)
-                                    .build();
-        GetResponse response = _blockingStub.get(request);
-        return response.getValue().getMessage().toByteArray();
+            ByteString keyBytes = ByteString.copyFromUtf8(key);
+            Key apiKey = Key.newBuilder().setMessage(keyBytes).build();
+            GetRequest request =
+                    GetRequest.newBuilder().setSpiralContext(context).setKey(apiKey).build();
+            GetResponse response = _blockingStub.get(request);
+            return response.getValue().getMessage().toByteArray();
         } catch (Exception e) {
-        LOG.error("Get: RPC failed for spiral context :{}, key :{}", context, key, e);
-        throw e;
+            LOG.error("Get: RPC failed for spiral context :{}, key :{}", context, key, e);
+            throw e;
         }
     }
 
@@ -146,25 +140,17 @@ public class SpiralStoreClient implements KVStoreClient<String, byte[], SpiralCo
         try {
             ByteString keyBytes = ByteString.copyFromUtf8(key);
             ByteString valueBytes = ByteString.copyFrom(value);
-            Key apiKey = Key.newBuilder()
-                            .setMessage(keyBytes)
-                            .build();
-            Value apiValue = Value.newBuilder()
-                                .setMessage(valueBytes)
-                                .build();
-            Put putValue = Put.newBuilder()
-                            .setKey(apiKey)
-                            .setValue(apiValue)
-                            .build();
-            
-            PutRequest request = PutRequest.newBuilder()
-                                    .setSpiralContext(context)
-                                    .setPut(putValue)
-                                    .build();
-            
+            Key apiKey = Key.newBuilder().setMessage(keyBytes).build();
+            Value apiValue = Value.newBuilder().setMessage(valueBytes).build();
+            Put putValue = Put.newBuilder().setKey(apiKey).setValue(apiValue).build();
+
+            PutRequest request =
+                    PutRequest.newBuilder().setSpiralContext(context).setPut(putValue).build();
+
             PutResponse response = _blockingStub.put(request);
         } catch (Exception e) {
-            LOG.error("Put: RPC failed for spiral context :{}, key :{}, value :{}", context, key, value, e);
+            LOG.error("Put: RPC failed for spiral context :{}, key :{}, value :{}", context, key,
+                    value, e);
             throw e;
         }
     }
@@ -173,13 +159,9 @@ public class SpiralStoreClient implements KVStoreClient<String, byte[], SpiralCo
     public void delete(SpiralContext context, String key) {
         try {
             ByteString keyBytes = ByteString.copyFromUtf8(key);
-            Key apiKey = Key.newBuilder()
-                            .setMessage(keyBytes)
-                            .build();
-            DeleteRequest request = DeleteRequest.newBuilder()
-                                        .setSpiralContext(context)
-                                        .setKey(apiKey)
-                                        .build();
+            Key apiKey = Key.newBuilder().setMessage(keyBytes).build();
+            DeleteRequest request =
+                    DeleteRequest.newBuilder().setSpiralContext(context).setKey(apiKey).build();
             DeleteResponse response = _blockingStub.delete(request);
         } catch (Exception e) {
             LOG.error("Delete: RPC failed for spiral context :{}, key :{}", context, key, e);
