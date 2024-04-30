@@ -1040,7 +1040,7 @@
   <repository>
     <id>artifactory</id>
     <name>LinkedIn's Artifactory</name>
-    <url>https://dev-artifactory.corp.linkedin.com:8083/artifactory/release/</url>
+    <url>https://artifactory.corp.linkedin.com:8083/artifactory/release/</url>
   </repository>
   </repositories>
 
